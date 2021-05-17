@@ -1,0 +1,78 @@
+import random
+import time
+import matplotlib.pyplot as plt
+def SetCostMatrix(num):
+    cmatrix = {}
+    for i in range(1, num + 1):
+        for j in range(i, num + 1):
+            if i == j:
+                cmatrix[(i, j)] = 0
+            else:
+                cmatrix[(i, j)] = random.randint(1, 30)
+                cmatrix[(j, i)] = cmatrix[(i, j)]
+    return cmatrix
+
+avgt = []
+bbb = []
+for total_num in range(4,13):
+  approxmindst = []
+  timegreedy = []
+  amd,t = 0,0
+  d = 999
+  for i in range(5):
+    start = time.process_time()
+    
+    
+    num_cities = SetCostMatrix(total_num)
+    cities = [c for c in range(1,total_num+1)]
+    print(total_num)
+    print(cities)
+
+    numLoc = len(cities)
+    origin = 1
+    tour = [origin]
+    tourLen = 0
+    unvisited = []
+    for k in range(1,numLoc+1):
+      unvisited.append(k)
+    unvisited.remove(origin)
+    cur = origin
+    for k in range(numLoc-1):
+      next = -1
+      mindst = 999
+      for j in unvisited:
+        if num_cities[(cur, j)] < mindst:
+          next = j
+          mindst = num_cities[(cur, j)]
+      unvisited.remove(next)
+      tour.append(next)
+      tourLen += mindst
+      cur = next
+    tour.append(origin)
+    tourLen += num_cities[(cur, origin)]
+    print(tour,tourLen)
+    approxmindst.append(tourLen)
+    if tourLen < d:
+      d = tourLen
+    
+    # error.append((approxmindst[i]-bestmindst[i])/bestmindst[i])
+    # print(error[i])
+
+    end = time.process_time()
+    t+=(end - start)
+    print(end - start)
+    timegreedy.append(end-start)
+  bb = 0
+  for b in range(5):
+    bb += (approxmindst[b]-d)/d
+  bbb.append(bb/5) 
+  avgt.append(t/5)
+print(avgt)
+# plt.plot([c for c in range(4,8)],avgt)
+# plt.show
+
+plt.subplot(2, 1, 1)
+plt.plot([c for c in range(4,13)],avgt)
+plt.subplot(2, 1, 2)
+plt.plot([c for c in range(4,13)],bbb)
+plt.show
