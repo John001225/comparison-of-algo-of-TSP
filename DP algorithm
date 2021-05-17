@@ -1,0 +1,101 @@
+import random
+import time
+def SetCostMatrix(num):
+    cmatrix = {}
+    for i in range(1, num + 1):
+        for j in range(i, num + 1):
+            if i == j:
+                cmatrix[(i, j)] = 0
+            else:
+                cmatrix[(i, j)] = random.randint(1, 30)
+                cmatrix[(j, i)] = cmatrix[(i, j)]
+    return cmatrix
+
+# total_num = random.randint(4,12)#原本是4-20但會跑不動，所以先改成-12
+# # total_num = 12
+# num_cities = SetCostMatrix(total_num)
+# cities = [c for c in range(1,total_num+1)]
+# print(total_num)
+# print(cities)
+
+def GetCostVal(row, col, source):
+    if col == 0:
+        col = source
+        return num_cities[(row, col)]
+    return num_cities[(row, col)]
+
+def TSPGetMinDistance(main_source, source, cities):
+    if len(cities) == 1:
+        minDis = GetCostVal(source, cities[0], main_source) + GetCostVal(cities[0], 0, main_source)
+        return minDis
+    else:
+        Dist = []
+        for city in cities:
+            dcities = cities[:]
+            dcities.remove(city)
+            Dist.append(GetCostVal(source, city, source) + TSPGetMinDistance(main_source, city, dcities))
+        iterative_process.append(Dist)
+        return min(Dist)
+
+# bestmindst = []
+# city = []
+# timeDP = []
+avgt = []
+bbb = []
+for total_num in range(4,13):
+  bestmindst = []
+  city = []
+  timeDP = []
+  t = 0
+  d = 999
+  for i in range(5):
+    start = time.process_time()
+
+    # total_num = random.randint(4,12)#原本是4-20但會跑不動，所以先改成-12
+    # total_num = 12
+    num_cities = SetCostMatrix(total_num)
+    cities = [c for c in range(1,total_num+1)]
+    print(total_num)
+    print(cities)
+    city.append(total_num)
+
+    iterative_process = []
+    mindst = TSPGetMinDistance(1, 1, [c for c in range(2,total_num+1)])
+    iterative_process[-1]
+    print(iterative_process[-1])
+    print(mindst)
+    if mindst < d:
+      d = mindst
+    bestmindst.append(mindst)
+
+    end = time.process_time()
+
+    print(end - start)
+    timeDP.append(end-start)
+    t += (end-start)
+  bb = 0
+  for b in range(5):
+    bb += (bestmindst[b]-d)/d
+  bbb.append(bb/5)  
+
+  print(bestmindst)
+  avgt.append(t/5)
+# iterative_process = []
+# mindst = TSPGetMinDistance(1, 1, [c for c in range(2,total_num+1)])
+# iterative_process[-1]
+# print(iterative_process[-1])
+# print(mindst)
+
+import matplotlib.pyplot as plt
+plt.subplot(2, 1, 1)
+plt.plot([c for c in range(4,13)],avgt)
+plt.subplot(2, 1, 2)
+plt.plot([c for c in range(4,13)],bbb)
+plt.show
+
+# plt.figure(figsize=(12, 8))
+# final_costs = sorted(iterative_process[-1])
+# final_costs = final_costs[::-1]
+# plt.scatter(list(range(2, len(final_costs) + 2)), final_costs, color='red')
+# plt.plot(list(range(2, len(final_costs) + 2)), final_costs)
+# plt.show()
